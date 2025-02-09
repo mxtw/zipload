@@ -30,6 +30,9 @@ func init() {
 	var token string
 	rootCmd.PersistentFlags().StringVar(&token, "token", "", "zipline API token")
 
+	var host string
+	rootCmd.PersistentFlags().StringVar(&host, "host", "", "zipline host")
+
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 }
