@@ -1,4 +1,4 @@
-package api
+package upload
 
 import (
 	"bytes"
@@ -12,15 +12,17 @@ import (
 	"net/url"
 	"os"
 	"path"
+
+	"github.com/mxtw/zipload/pkg/api"
 )
 
 type uploadResponse struct {
 	Files []string `json:"files"`
 }
 
-func (c Client) Upload(filename string) ([]string, error) {
+func Upload(client *api.Client, filename string, options Options) ([]string, error) {
 
-	endpoint, err := url.JoinPath(c.host, "/api/upload")
+	endpoint, err := url.JoinPath(client.Host, "/api/upload")
 	if err != nil {
 		log.Println(err)
 		return []string{}, err
@@ -34,9 +36,11 @@ func (c Client) Upload(filename string) ([]string, error) {
 		return []string{}, err
 	}
 
+	headers := options.toHeaders()
+
+	req.Header = headers
 	req.Header.Add("Content-Type", contentType)
-	req.Header.Add("Authorization", c.token)
-	req.Header.Add("Embed", "true")
+	req.Header.Add("Authorization", client.Token)
 
 	hc := http.Client{}
 

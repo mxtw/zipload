@@ -1,8 +1,8 @@
 package api
 
 type Client struct {
-	token string
-	host  string
+	Token string
+	Host  string
 }
 
 func NewClient(token string, host string) Client {
