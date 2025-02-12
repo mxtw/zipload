@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var rootCmd = &cobra.Command{
@@ -21,18 +23,38 @@ func Execute() {
 	}
 }
 
-func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+var cfgFile string
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.zipload.yaml)")
+func init() {
+	cobra.OnInitialize(initConfig)
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.zipload.yaml)")
+
 	var token string
 	rootCmd.PersistentFlags().StringVar(&token, "token", "", "zipline API token")
+	rootCmd.MarkFlagRequired("token")
+	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 
 	var host string
 	rootCmd.PersistentFlags().StringVar(&host, "host", "", "zipline host")
+	viper.BindPFlag("host", rootCmd.PersistentFlags().Lookup("host"))
+	rootCmd.MarkFlagRequired("host")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
+}
+
+func initConfig() {
+	// Don't forget to read config either from cfgFile or from home directory!
+	if cfgFile != "" {
+		// Use config file from the flag.
+		viper.SetConfigFile(cfgFile)
+	} else {
+		// Search config in home directory with name ".cobra" (without extension).
+		viper.AddConfigPath("$XDG_CONFIG_HOME/zipload")
+		viper.AddConfigPath("$HOME/.zipload")
+		viper.AddConfigPath(".")
+		viper.SetConfigName("zipload")
+	}
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Println("Can't read config:", err)
+	}
 }
