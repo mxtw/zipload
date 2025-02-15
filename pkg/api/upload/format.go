@@ -5,9 +5,9 @@ import "errors"
 type Format uint8
 
 const (
-	FormatUUID Format = iota
+	FormatRandom = iota
+	FormatUUID
 	FormatDate
-	FormatRandom
 	FormatName
 )
 
