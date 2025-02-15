@@ -22,23 +22,46 @@ type Options struct {
 	XZiplineFolder          uint
 }
 
-// i dont really like this setup but i guess its functional
 func (o Options) toHeaders() http.Header {
 	headers := http.Header{}
 
+	// use a helper function to only set headers when it makes sense to set
+	// them especially bool headers will be respected by zipline even if they
+	// are just set, true or false does not matter
+	setHeader := func(key string, value interface{}) {
+		switch v := value.(type) {
+		case bool:
+			if v {
+				headers.Set(key, strconv.FormatBool(v))
+			}
+		case string:
+			if v != "" {
+				headers.Set(key, v)
+			}
+		case uint8:
+			if v != 0 {
+				headers.Set(key, strconv.FormatUint(uint64(v), 10))
+			}
+		case uint:
+			if v != 0 {
+				headers.Set(key, strconv.FormatUint(uint64(v), 10))
+			}
+		}
+	}
+
 	formatFlag := FormatFlag{Value: o.Format}
 
-	headers.Set("Format", formatFlag.String())
-	headers.Set("Image-Compression-Percent", strconv.FormatUint(uint64(o.ImageCompressionPercent), 10))
-	headers.Set("Expires-At", o.ExpiresAt)
-	headers.Set("Password", o.Password)
-	headers.Set("Zws", strconv.FormatBool(o.ZeroWidthSpace))
-	headers.Set("Embed", strconv.FormatBool(o.Embed))
-	headers.Set("Max-Views", strconv.FormatUint(uint64(o.MaxViews), 10))
-	headers.Set("UploadText", strconv.FormatBool(o.UploadText))
-	headers.Set("X-Zipline-Filename", o.XZiplineFilename)
-	headers.Set("Override-Domain", o.OverrideDomain)
-	headers.Set("X-Zipline-Folder", strconv.FormatUint(uint64(o.XZiplineFolder), 10))
+	setHeader("Format", formatFlag.String())
+	setHeader("Image-Compression-Percent", o.ImageCompressionPercent)
+	setHeader("Expires-At", o.ExpiresAt)
+	setHeader("Password", o.Password)
+	setHeader("Zws", o.ZeroWidthSpace)
+	setHeader("Embed", o.Embed)
+	setHeader("Max-Views", o.MaxViews)
+	setHeader("UploadText", o.UploadText)
+	setHeader("X-Zipline-Filename", o.XZiplineFilename)
+	setHeader("Override-Domain", o.OverrideDomain)
+	setHeader("X-Zipline-Folder", o.XZiplineFolder)
 
 	log.Println(headers)
 
