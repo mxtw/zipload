@@ -27,7 +27,7 @@ var cfgFile string
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.zipload.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.zipload/zipload.yaml)")
 
 	var token string
 	rootCmd.PersistentFlags().StringVar(&token, "token", "", "zipline API token")
