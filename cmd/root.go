@@ -48,9 +48,9 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Search config in home directory with name ".cobra" (without extension).
-		viper.AddConfigPath("$XDG_CONFIG_HOME/zipload")
-		viper.AddConfigPath("$HOME/.zipload")
 		viper.AddConfigPath(".")
+		viper.AddConfigPath("$HOME/.zipload")
+		viper.AddConfigPath("$XDG_CONFIG_HOME/zipload")
 		viper.SetConfigName("zipload")
 	}
 
