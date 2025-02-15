@@ -1,14 +1,16 @@
 package api
 
+import "github.com/spf13/viper"
+
 type Client struct {
 	Token string
 	Host  string
 }
 
-func NewClient(token string, host string) Client {
+func NewClient() Client {
 	client := Client{
-		token,
-		host,
+		viper.GetString("token"),
+		viper.GetString("host"),
 	}
 	return client
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/mxtw/zipload/pkg/api"
 	"github.com/mxtw/zipload/pkg/api/upload"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // uploadCmd represents the upload command
@@ -19,9 +18,7 @@ var uploadCmd = &cobra.Command{
     refer to https://zipline.diced.sh/docs/guides/upload-options for more info on the upload options`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		token := viper.GetString("token")
-		host := viper.GetString("host")
-		client := api.NewClient(token, host)
+		client := api.NewClient()
 
 		options := upload.Options{
 			Format:                  format.Value,
