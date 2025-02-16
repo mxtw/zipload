@@ -20,11 +20,6 @@ var shortenCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		client := api.NewClient()
 
-		options := shorten.Options{
-			ZeroWidthSpace: zeroWidthSpace,
-			MaxViews:       maxViews,
-		}
-
 		url, err := shorten.Shorten(&client, args[0], vanity, options)
 		if err != nil {
 			log.Fatalln(err)
@@ -42,6 +37,6 @@ var (
 func init() {
 	rootCmd.AddCommand(shortenCmd)
 	shortenCmd.Flags().StringVar(&vanity, "vanity", "", "vanity url")
-	shortenCmd.Flags().BoolVar(&zeroWidthSpace, "zero-width-space", false, "url should use a zero width space")
-	shortenCmd.Flags().UintVar(&maxViews, "max-views", 0, "maximum allowed views on link")
+	shortenCmd.Flags().BoolVar(&options.ZeroWidthSpace, "zero-width-space", false, "url should use a zero width space")
+	shortenCmd.Flags().UintVar(&options.MaxViews, "max-views", 0, "maximum allowed views on link")
 }

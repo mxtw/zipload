@@ -1,10 +1,10 @@
-package upload
+package api
 
 import (
 	"testing"
 )
 
-func TestOptions_toHeaders(t *testing.T) {
+func TestOptions_ToHeaders(t *testing.T) {
 	tests := []struct {
 		name     string
 		options  Options
@@ -52,7 +52,7 @@ func TestOptions_toHeaders(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			headers := tt.options.toHeaders()
+			headers := tt.options.ToHeaders()
 			for key, expectedValue := range tt.expected {
 				if headers.Get(key) != expectedValue {
 					t.Errorf("Expected %q for header %q, got %q", expectedValue, key, headers.Get(key))

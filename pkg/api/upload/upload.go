@@ -20,7 +20,7 @@ type uploadResponse struct {
 	Files []string `json:"files"`
 }
 
-func Upload(client *api.Client, filename string, options Options) ([]string, error) {
+func Upload(client *api.Client, filename string, options api.Options) ([]string, error) {
 
 	endpoint, err := url.JoinPath(client.Host, "/api/upload")
 	if err != nil {
@@ -36,7 +36,7 @@ func Upload(client *api.Client, filename string, options Options) ([]string, err
 		return []string{}, err
 	}
 
-	headers := options.toHeaders()
+	headers := options.ToHeaders()
 
 	req.Header = headers
 	req.Header.Add("Content-Type", contentType)

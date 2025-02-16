@@ -1,4 +1,4 @@
-package upload
+package api
 
 import (
 	"testing"

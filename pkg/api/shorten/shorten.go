@@ -6,15 +6,9 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"strconv"
 
 	"github.com/mxtw/zipload/pkg/api"
 )
-
-type Options struct {
-	ZeroWidthSpace bool
-	MaxViews       uint
-}
 
 type postBody struct {
 	Url    string `json:"url"`
@@ -25,7 +19,7 @@ type shortenResponse struct {
 	Url string `json:"url"`
 }
 
-func Shorten(client *api.Client, targetUrl string, vanity string, options Options) (string, error) {
+func Shorten(client *api.Client, targetUrl string, vanity string, options api.Options) (string, error) {
 	endpoint, err := url.JoinPath(client.Host, "/api/shorten")
 	if err != nil {
 		log.Println(err)
@@ -50,15 +44,9 @@ func Shorten(client *api.Client, targetUrl string, vanity string, options Option
 		return "", err
 	}
 
+	req.Header = options.ToHeaders()
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", client.Token)
-
-	if options.ZeroWidthSpace {
-		req.Header.Add("Zws", "true")
-	}
-	if options.MaxViews > 0 {
-		req.Header.Add("Max-Views", strconv.FormatUint(uint64(options.MaxViews), 10))
-	}
 
 	hc := http.Client{}
 

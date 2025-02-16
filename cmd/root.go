@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/mxtw/zipload/pkg/api"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -23,11 +24,29 @@ func Execute() {
 	}
 }
 
-var cfgFile string
+var (
+	options api.Options
+	cfgFile string
+)
 
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.zipload/zipload.yaml)")
+
+	options = api.Options{
+		Format:                  api.FormatFlag{},
+		ImageCompressionPercent: 0,
+		ExpiresAt:               "",
+		Password:                "",
+		ZeroWidthSpace:          false,
+		Embed:                   false,
+		MaxViews:                0,
+		UploadText:              false,
+		XZiplineFilename:        "",
+		OriginalName:            false,
+		OverrideDomain:          "",
+		XZiplineFolder:          0,
+	}
 
 	var token string
 	rootCmd.PersistentFlags().StringVar(&token, "token", "", "zipline API token")

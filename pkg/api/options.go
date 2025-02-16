@@ -1,4 +1,4 @@
-package upload
+package api
 
 import (
 	"log"
@@ -8,7 +8,7 @@ import (
 
 // refer to https://zipline.diced.sh/docs/guides/upload-options
 type Options struct {
-	Format                  Format
+	Format                  FormatFlag
 	ImageCompressionPercent uint8
 	ExpiresAt               string
 	Password                string
@@ -22,7 +22,7 @@ type Options struct {
 	XZiplineFolder          uint
 }
 
-func (o Options) toHeaders() http.Header {
+func (o Options) ToHeaders() http.Header {
 	headers := http.Header{}
 
 	// use a helper function to only set headers when it makes sense to set
@@ -49,9 +49,9 @@ func (o Options) toHeaders() http.Header {
 		}
 	}
 
-	formatFlag := FormatFlag{Value: o.Format}
-
-	setHeader("Format", formatFlag.String())
+	if o.Format.Value >= 0 {
+		setHeader("Format", o.Format.String())
+	}
 	setHeader("Image-Compression-Percent", o.ImageCompressionPercent)
 	setHeader("Expires-At", o.ExpiresAt)
 	setHeader("Password", o.Password)
