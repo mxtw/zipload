@@ -9,6 +9,7 @@ const (
 	FormatUUID
 	FormatDate
 	FormatName
+	FormatGfycat
 )
 
 // needed for cobra
@@ -21,6 +22,7 @@ var formatMap = map[string]Format{
 	"date":   FormatDate,
 	"random": FormatRandom,
 	"name":   FormatName,
+	"gfycat": FormatGfycat,
 }
 
 func (f *FormatFlag) Set(s string) error {

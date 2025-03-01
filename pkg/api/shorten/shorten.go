@@ -12,8 +12,7 @@ import (
 )
 
 type Options struct {
-	ZeroWidthSpace bool
-	MaxViews       uint
+	MaxViews uint
 }
 
 type postBody struct {
@@ -53,11 +52,8 @@ func Shorten(client *api.Client, targetUrl string, vanity string, options Option
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", client.Token)
 
-	if options.ZeroWidthSpace {
-		req.Header.Add("Zws", "true")
-	}
 	if options.MaxViews > 0 {
-		req.Header.Add("Max-Views", strconv.FormatUint(uint64(options.MaxViews), 10))
+		req.Header.Add("x-zipline-max-views", strconv.FormatUint(uint64(options.MaxViews), 10))
 	}
 
 	hc := http.Client{}

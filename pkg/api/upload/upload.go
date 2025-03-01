@@ -17,15 +17,21 @@ import (
 )
 
 type uploadResponse struct {
-	Files []string `json:"files"`
+	Files []File `json:"files"`
 }
 
-func Upload(client *api.Client, filename string, options Options) ([]string, error) {
+type File struct {
+	Id   string `json:"id"`
+	Type string `json:"type"`
+	Url  string `json:"url"`
+}
+
+func Upload(client *api.Client, filename string, options Options) ([]File, error) {
 
 	endpoint, err := url.JoinPath(client.Host, "/api/upload")
 	if err != nil {
 		log.Println(err)
-		return []string{}, err
+		return []File{}, err
 	}
 
 	buf, contentType, err := readFileToMulitpart(filename)
@@ -33,7 +39,7 @@ func Upload(client *api.Client, filename string, options Options) ([]string, err
 	req, err := http.NewRequest("POST", endpoint, &buf)
 	if err != nil {
 		log.Println(err)
-		return []string{}, err
+		return []File{}, err
 	}
 
 	headers := options.toHeaders()
@@ -47,11 +53,11 @@ func Upload(client *api.Client, filename string, options Options) ([]string, err
 	resp, err := hc.Do(req)
 	if err != nil {
 		log.Println("Error:", err)
-		return []string{}, err
+		return []File{}, err
 	}
 	if resp.StatusCode != http.StatusOK {
 		log.Println(resp.Status)
-		return []string{}, err
+		return []File{}, err
 	}
 
 	jsonResponse := uploadResponse{}

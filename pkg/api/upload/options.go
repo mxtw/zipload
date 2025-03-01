@@ -8,18 +8,16 @@ import (
 
 // refer to https://zipline.diced.sh/docs/guides/upload-options
 type Options struct {
+	DeletesAt               string
+	Domain                  string
+	FileExtension           string
+	Filename                string
+	Folder                  uint
 	Format                  Format
 	ImageCompressionPercent uint8
-	ExpiresAt               string
-	Password                string
-	ZeroWidthSpace          bool
-	Embed                   bool
 	MaxViews                uint
-	UploadText              bool
-	XZiplineFilename        string
 	OriginalName            bool
-	OverrideDomain          string
-	XZiplineFolder          uint
+	Password                string
 }
 
 func (o Options) toHeaders() http.Header {
@@ -28,7 +26,7 @@ func (o Options) toHeaders() http.Header {
 	// use a helper function to only set headers when it makes sense to set
 	// them especially bool headers will be respected by zipline even if they
 	// are just set, true or false does not matter
-	setHeader := func(key string, value interface{}) {
+	setHeader := func(key string, value any) {
 		switch v := value.(type) {
 		case bool:
 			if v {
@@ -51,17 +49,16 @@ func (o Options) toHeaders() http.Header {
 
 	formatFlag := FormatFlag{Value: o.Format}
 
-	setHeader("Format", formatFlag.String())
-	setHeader("Image-Compression-Percent", o.ImageCompressionPercent)
-	setHeader("Expires-At", o.ExpiresAt)
-	setHeader("Password", o.Password)
-	setHeader("Zws", o.ZeroWidthSpace)
-	setHeader("Embed", o.Embed)
-	setHeader("Max-Views", o.MaxViews)
-	setHeader("UploadText", o.UploadText)
-	setHeader("X-Zipline-Filename", o.XZiplineFilename)
-	setHeader("Override-Domain", o.OverrideDomain)
-	setHeader("X-Zipline-Folder", o.XZiplineFolder)
+	setHeader("x-zipline-deletes-at", o.DeletesAt)
+	setHeader("x-zipline-domain", o.Domain)
+	setHeader("x-zipline-file-extension", o.FileExtension)
+	setHeader("x-zipline-filename", o.Filename)
+	setHeader("x-zipline-folder", o.Folder)
+	setHeader("x-zipline-format", formatFlag.String())
+	setHeader("x-zipline-image-compression-percent", o.ImageCompressionPercent)
+	setHeader("x-zipline-max-views", o.MaxViews)
+	setHeader("x-zipline-original-name", o.OriginalName)
+	setHeader("x-zipline-password", o.Password)
 
 	log.Println(headers)
 
