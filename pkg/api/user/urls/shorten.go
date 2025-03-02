@@ -1,4 +1,4 @@
-package shorten
+package urls
 
 import (
 	"bytes"
@@ -11,21 +11,24 @@ import (
 	"github.com/mxtw/zipload/pkg/api"
 )
 
+// TODO: centralize those options somewhere
 type Options struct {
 	MaxViews uint
+	Domain   string
+	Password string
 }
 
 type postBody struct {
-	Url    string `json:"url"`
-	Vanity string `json:"vanity"`
+	Destination string `json:"destination"`
+	Vanity      string `json:"vanity"`
 }
 
 type shortenResponse struct {
 	Url string `json:"url"`
 }
 
-func Shorten(client *api.Client, targetUrl string, vanity string, options Options) (string, error) {
-	endpoint, err := url.JoinPath(client.Host, "/api/shorten")
+func Url(client *api.Client, targetUrl string, vanity string, options Options) (string, error) {
+	endpoint, err := url.JoinPath(client.Host, "/api/user/urls")
 	if err != nil {
 		log.Println(err)
 		return "", err
@@ -55,6 +58,12 @@ func Shorten(client *api.Client, targetUrl string, vanity string, options Option
 	if options.MaxViews > 0 {
 		req.Header.Add("x-zipline-max-views", strconv.FormatUint(uint64(options.MaxViews), 10))
 	}
+	if options.Domain != "" {
+		req.Header.Add("x-zipline-domain", options.Domain)
+	}
+	if options.Password != "" {
+		req.Header.Add("x-zipline-password", options.Password)
+	}
 
 	hc := http.Client{}
 
@@ -67,10 +76,6 @@ func Shorten(client *api.Client, targetUrl string, vanity string, options Option
 
 	if resp.StatusCode != http.StatusOK {
 		log.Println(resp.Status)
-
-		var test interface{}
-		json.NewDecoder(resp.Body).Decode(&test)
-		log.Println(test)
 
 		return "", err
 	}
