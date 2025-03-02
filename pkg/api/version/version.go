@@ -9,17 +9,8 @@ import (
 	"github.com/mxtw/zipload/pkg/api"
 )
 
-type versions struct {
-	Stable   string `json:"stable"`
-	Upstream string `json:"upstream"`
-	Current  string `json:"current"`
-}
-
 type versionInfo struct {
-	IsUpstream   bool     `json:"isUpstream"`
-	Update       bool     `json:"update"`
-	UpdateToType string   `json:"updateToType"`
-	Versions     versions `json:"versions"`
+	Version string `json:"version"`
 }
 
 func Version(client *api.Client) (versionInfo, error) {

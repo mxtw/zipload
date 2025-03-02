@@ -28,11 +28,7 @@ var versionCmd = &cobra.Command{
 				log.Fatalf("could not get server version")
 			}
 
-			fmt.Printf("zipline server version: %s\n", serverVersion.Versions.Current)
-
-			if serverVersion.Update {
-				fmt.Printf("zipline server version %s is available\n", serverVersion.Versions.Stable)
-			}
+			fmt.Printf("zipline server version: %s\n", serverVersion.Version)
 		}
 	},
 }
